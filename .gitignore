@@ -24,8 +24,9 @@ node_modules/
 
 # Expo / React Native
 mobile/.expo/
-mobile/dist/
-mobile/build/
+mobile/theIncredibles/.expo/
+mobile/theIncredibles/dist/
+mobile/theIncredibles/build/
 *.jks
 *.p8
 *.p12

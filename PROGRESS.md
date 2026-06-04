@@ -10,7 +10,7 @@
 ## Current Focus
 _What are we working on right now?_
 
-- Scaffolding the Expo mobile app
+- Building main navigation and dashboard structure
 
 ---
 
@@ -18,6 +18,7 @@ _What are we working on right now?_
 _Anything preventing progress?_
 
 - Supabase Studio UI failing to load schema (cosmetic bug, does not affect functionality)
+- SUPABASE_URL in lib/supabase.ts is hardcoded to local IP 192.168.86.218 — will need to switch to Tailscale IP for on-the-go access
 
 ---
 
@@ -43,7 +44,7 @@ _Anything preventing progress?_
 | Database schema designed | ✅ Done | 5 tables: profiles, tasks, task_comments, notes, reminders |
 | RLS enabled | ✅ Done | All tables have row level security enabled |
 | Auth configured | ✅ Done | |
-| Users created (Dasa, Harini, Smaran) | ✅ Done | Dasa & Harini = admin, Smaran = member |
+| Users created (Bob, Helen, Dash) | ✅ Done | Bob & Helen = admin, Dash = member |
 | Roles configured (admin vs standard) | ✅ Done | |
 
 ---
@@ -65,9 +66,9 @@ _Anything preventing progress?_
 
 | Item | Status | Notes |
 |---|---|---|
-| Expo project scaffolded | Not started | |
-| Supabase client connected | Not started | |
-| Auth / login screen | Not started | |
+| Expo project scaffolded | ✅ Done | SDK 54, blank-typescript template |
+| Supabase client connected | ✅ Done | Using local IP 192.168.86.218:8000 |
+| Auth / login screen | ✅ Done | Email + password, tested and working on Android |
 | Navigation structure | Not started | |
 
 ---
@@ -93,7 +94,7 @@ _Record of key decisions made during build — useful context for future session
 | 2026-06-03 | Supabase for backend | DB + auth + storage in one self-hosted package |
 | 2026-06-03 | React Native + Expo for mobile | Single codebase, Android first, iOS later |
 | 2026-06-03 | Tailscale for remote access | Secure, no port forwarding, easy family setup |
-| 2026-06-03 | Server-side media integration | Smaran doesn't need Google/MS credentials |
+| 2026-06-03 | Server-side media integration | Dash doesn't need Google/MS credentials |
 | 2026-06-03 | On-demand thumbnail loading | TBs of data makes background sync impractical |
 | 2026-06-03 | Server-side thumbnail cache | Google Photos-quality scroll smoothness for both sources |
 | 2026-06-03 | MCP filesystem server configured | Claude can read/write to ~/builds/theIncredibles directly |
@@ -104,6 +105,7 @@ _Record of key decisions made during build — useful context for future session
 | 2026-06-04 | Task status: not_started → in_progress → done | done → in_progress allowed only by admins |
 | 2026-06-04 | Avoid # in passwords | Special chars break Postgres connection URLs |
 | 2026-06-04 | Internal DB user passwords reset via 127.0.0.1 trust | Required after POSTGRES_PASSWORD change |
+| 2026-06-04 | Expo SDK 54 | SDK 56/53 incompatible with installed Expo Go; 54 matches |
 
 ---
 
@@ -115,12 +117,19 @@ _Record of key decisions made during build — useful context for future session
   ├── PROGRESS.md
   ├── backend/
   │   ├── scripts/
-  │   │   ├── generate-keys.js   ← generates ANON_KEY + SERVICE_ROLE_KEY into .env
-  │   │   └── create-users.js    ← creates family member accounts in Supabase
+  │   │   ├── generate-keys.js      ← generates ANON_KEY + SERVICE_ROLE_KEY into .env
+  │   │   ├── create-users.js       ← creates family member accounts in Supabase
+  │   │   └── copy-anon-key.js      ← copies ANON_KEY into mobile .env.local
   │   ├── supabase/
   │   │   ├── migrations/
   │   │   │   └── 001_initial_schema.sql  ← applied ✅
   │   │   └── docker/                     ← Docker Compose + config
   │   └── media-service/                  ← Node.js media proxy (not started)
-  └── mobile/                             ← React Native + Expo app (not started)
+  └── mobile/
+      └── theIncredibles/
+          ├── App.tsx                ← auth state, routes to login or dashboard
+          ├── lib/
+          │   └── supabase.ts        ← Supabase client config
+          └── screens/
+              └── LoginScreen.tsx    ← email/password login
 ```
