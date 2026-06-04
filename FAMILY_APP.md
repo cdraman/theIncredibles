@@ -6,9 +6,9 @@ theIncredibles is a self-hosted family dashboard app for personal use. Accessibl
 ---
 
 ## Family
-- Users: me (Dasa), spouse (Harini), child (Smaran)
-- Administrators: Dasa and Harini
-- Standard user: Smaran
+- Users: me (Bob), spouse (Helen), child (Dash)
+- Administrators: Bob and Helen
+- Standard user: Dash
 - Primary devices: Android (iOS support planned for later)
 
 ---
@@ -16,15 +16,15 @@ theIncredibles is a self-hosted family dashboard app for personal use. Accessibl
 ## Features
 
 ### Tasks
-- Each task has an **owner**: Dasa, Harini, or Smaran
+- Each task has an **owner**: Bob, Helen, or Dash
 - Each task has a **due date**
 - Each task has a **completion criteria** — a plain text field describing what "done" looks like
 - **Owners** can mark a task as Done once they believe completion criteria is met
-- **Administrators** (Dasa and Harini) can:
+- **Administrators** (Bob and Helen) can:
   - Assign or change the owner of a task
   - Mark a task as "Not Done" if completion criteria isn't satisfied
   - Receive a push notification when any task is marked Done
-- **Smaran** is a child user (standard user role):
+- **Dash** is a child user (standard user role):
   - Can view and complete their own tasks
   - Cannot change task ownership or administration settings
 
@@ -36,21 +36,21 @@ theIncredibles is a self-hosted family dashboard app for personal use. Accessibl
   - File attachments
 
 ### Reminders
-- Each reminder has a **target**: Dasa, Harini, or Smaran
+- Each reminder has a **target**: Bob, Helen, or Dash
 - Reminders are **periodic** — they recur on a schedule (e.g. every Friday at 5 PM)
-- **Administrators** (Dasa and Harini) can:
+- **Administrators** (Bob and Helen) can:
   - Create, edit, and delete reminders
   - Assign or change the target
 - **Targets** (the person the reminder is directed at):
   - Receive a notification when the reminder fires
   - Can only **Acknowledge** the reminder — which snoozes it until the next scheduled occurrence
   - Cannot edit or delete the reminder
-- Example: *"Smaran, start a load of your laundry by 5 PM"* — repeats every Friday
+- Example: *"Dash, start a load of your laundry by 5 PM"* — repeats every Friday
 
 ### Photos & Videos
 - Photos and videos live in **Google Photos** and **Microsoft OneDrive** (existing family storage; TBs of data)
 - Integration is **server-side only** — the MacBook backend authenticates with Google/Microsoft and proxies media to the app
-- Family members (including Smaran) only log into the family app — no Google or Microsoft authentication on their devices
+- Family members (including Dash) only log into the family app — no Google or Microsoft authentication on their devices
 - The app has **separate sections** for Google Photos and OneDrive
 - **View only** — no upload or download to phone
 - **On-demand loading** — no background sync (too expensive given TBs of data)
@@ -119,10 +119,9 @@ Phone (LTE or any WiFi)
 ---
 
 ## Open Questions / Decisions
-- MacBook RAM: TBD (affects Docker performance)
 - Push notifications strategy: TBD
 
 ---
 
 ## How to Use This File
-At the start of a new Claude session, say "Read my project files from theIncredibles" — Claude will read them directly via MCP from ~/Documents/theIncredibles.
+At the start of a new Claude session, say "Read my project files from theIncredibles" — Claude will read them directly via MCP from ~/builds/theIncredibles.
