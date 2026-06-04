@@ -1,0 +1,46 @@
+# Environment files — never commit these
+.env
+**/.env
+**/.env.local
+**/.env.*.local
+*.env
+
+# Supabase docker volumes and logs
+backend/supabase/docker/volumes/
+backend/supabase/docker/logs/
+
+# Supabase source — we only need docker/ and migrations/
+backend/supabase/apps/
+backend/supabase/examples/
+backend/supabase/packages/
+backend/supabase/i18n/
+backend/supabase/spec/
+backend/supabase/tests/
+backend/supabase/.github/
+
+# Node modules
+node_modules/
+**/node_modules/
+
+# Expo / React Native
+mobile/.expo/
+mobile/dist/
+mobile/build/
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+
+# macOS
+.DS_Store
+**/.DS_Store
+
+# Logs
+*.log
+npm-debug.log*
+
+# IDE
+.vscode/
+.idea/
