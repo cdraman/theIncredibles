@@ -18,15 +18,21 @@ theIncredibles is a self-hosted family dashboard app for personal use. Accessibl
 ### Tasks
 - Each task has an **owner**: Bob, Helen, or Dash
 - Each task has a **due date**
-- Each task has a **completion criteria** — a plain text field describing what "done" looks like
-- **Owners** can mark a task as Done once they believe completion criteria is met
+- Each task has a **description** — plain text describing what needs to be done
+- Each task has a **completion criteria** — plain text describing what "done" looks like
+- Task status flow: `not_started` → `in_progress` → `done`
+  - Owner or admin can move: not_started → in_progress → done
+  - Only admins can move: done → in_progress
 - **Administrators** (Bob and Helen) can:
-  - Assign or change the owner of a task
-  - Mark a task as "Not Done" if completion criteria isn't satisfied
+  - Create tasks and assign owner
+  - Change the owner of a task
+  - Mark a task as "Not Done" (revert done → in_progress)
   - Receive a push notification when any task is marked Done
 - **Dash** is a child user (standard user role):
-  - Can view and complete their own tasks
-  - Cannot change task ownership or administration settings
+  - Can view and update status of their own tasks
+  - Cannot change task ownership or create tasks
+- All family members can add comments to any task
+- Only admins can edit or delete comments
 
 ### Notes
 - All family members can create notes
@@ -34,17 +40,20 @@ theIncredibles is a self-hosted family dashboard app for personal use. Accessibl
   - Plain text
   - Links to websites
   - File attachments
+- Visible to all family members
 
 ### Reminders
 - Each reminder has a **target**: Bob, Helen, or Dash
 - Reminders are **periodic** — they recur on a schedule (e.g. every Friday at 5 PM)
+- Schedule stored as a cron expression (e.g. `0 17 * * 5` = every Friday at 5 PM)
 - **Administrators** (Bob and Helen) can:
   - Create, edit, and delete reminders
   - Assign or change the target
 - **Targets** (the person the reminder is directed at):
   - Receive a notification when the reminder fires
-  - Can only **Acknowledge** the reminder — which snoozes it until the next scheduled occurrence
+  - Can only **Acknowledge** the reminder — snoozes until next scheduled occurrence
   - Cannot edit or delete the reminder
+- Acknowledgement tracked via `last_acknowledged_at` (no full history needed)
 - Example: *"Dash, start a load of your laundry by 5 PM"* — repeats every Friday
 
 ### Photos & Videos
@@ -65,9 +74,6 @@ theIncredibles is a self-hosted family dashboard app for personal use. Accessibl
 - Lightweight placeholder shown while a thumbnail is loading
 - Full resolution photo/video fetched on demand when an item is opened
 
-#### Why this works for both sources
-- Google Photos API is fast; OneDrive API is slower — by caching on the server, both feel equally smooth in the app
-
 ---
 
 ## Stack
@@ -76,16 +82,16 @@ theIncredibles is a self-hosted family dashboard app for personal use. Accessibl
 - **Supabase** (self-hosted via Docker)
   - PostgreSQL database
   - Auth (per family member)
-  - REST API
+  - REST API (PostgREST)
   - File storage (notes attachments)
-- **Media integration service** (Node.js or Python, Docker container)
+- **Media integration service** (Node.js, Docker container)
   - Google Photos API integration (server-side OAuth)
   - Microsoft OneDrive API integration (server-side OAuth)
   - Server-side thumbnail cache (local disk on MacBook)
   - Proxies thumbnails and media to the app on demand
 
 ### Mobile App
-- **React Native + Expo**
+- **React Native + Expo SDK 54**
   - Single codebase for Android (+ iOS later)
   - Virtualized list for photo grid (smooth scrolling)
   - Pre-fetch thumbnails ahead of scroll position
@@ -98,8 +104,8 @@ theIncredibles is a self-hosted family dashboard app for personal use. Accessibl
 ---
 
 ## Hosting
-- **Host machine:** MacBook (always-on)
-- **Runtime:** Docker Desktop
+- **Host machine:** MacBook (always-on, 16GB RAM)
+- **Runtime:** Docker Desktop (memory capped at 4GB)
 - MacBook needs to stay awake — use Amphetamine or equivalent
 
 ---
@@ -108,9 +114,9 @@ theIncredibles is a self-hosted family dashboard app for personal use. Accessibl
 ```
 Phone (LTE or any WiFi)
   → Tailscale tunnel
-    → MacBook local IP
-      ├── Supabase (tasks, notes, reminders, auth)
-      └── Media service
+    → MacBook Tailscale IP
+      ├── Supabase :8000 (tasks, notes, reminders, auth)
+      └── Media service :3001
             ├── Thumbnail cache (local disk)
             ├── Google Photos API (on first request / cache miss)
             └── Microsoft OneDrive API (on first request / cache miss)
@@ -120,6 +126,7 @@ Phone (LTE or any WiFi)
 
 ## Open Questions / Decisions
 - Push notifications strategy: TBD
+- Supabase URL strategy: currently hardcoded to local IP — needs env-based config for Tailscale
 
 ---
 
